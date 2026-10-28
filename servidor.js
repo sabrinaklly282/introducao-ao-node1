@@ -191,58 +191,6 @@ app.listen(3000, () => {
     console.log("Servidor iniciado em http://localhost:3000");
 })
 
-const usuarios = [
-    {
-        id : 1 ,
-        nome : "luiza" ,
-        curso : "ia" ,
-        turno : "manha"
-    }, 
-    {
-        id : 2 ,
-        nome : "João" ,
-        curso : "fullstack" ,
-        turno : "tarde"
-    },
-    {
-        id : 3 ,
-        nome : "Maria" ,
-        curso : "frontend" ,
-        turno : "noite"
-    },
-    {
-        id : 4 ,
-        nome : "Ana" ,
-        curso : "ia" ,
-        turno : "manha"
-    },
-    {
-        id : 5 ,
-        nome : "Biatriz" ,
-        curso : "fullstack" ,
-        turno : "tarde"
-    },
-]
-
-
-app.get("/usuarios", (req, res) => {
-    res.json(usuarios)
-})
-
-app.get("/usuarios/:id", (req, res) => {
-    if(req.query.campo) res.json(usuarios[req.params.id-1][req.query.campo])
-    else res.json(usuarios[req.params.id - 1])
-})
-
-//app.get("/adicionar", (req, res) => {
-//    res.json(`<form>
-//        <input type="text" name="nome" id="meuInput"/>
-//
-//        </form>
-//        `)
-//})
-
-
 
 // Rotas /contato e /curriculo.
 // Devem retornar uma página estruturada e estilizada em HTML e CSS INLINE
