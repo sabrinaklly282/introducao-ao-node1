@@ -1,5 +1,7 @@
 const express = require("express")
 const app = express()
+app.use(express.json())
+
 let usuarios = [
     {
         id: 1,
@@ -33,43 +35,66 @@ let usuarios = [
     }
 ]
 
+function salvar() {
+    const jsonData = JSON.stringify(usuarios, null, 2);
+
+    FileSystem.writeFile("usuarios.json", jsonData, 'utf8', (err) => {
+        if (err) {
+            console.error('erro ao salvar arquivo', err);
+        } else {
+            console.log('arquivo salvo com sucesso');
+        }
+    });
+}
+
+function ler() {
+    FileSystem.readFile("usuarios.json", (err, data) => {
+        if(err) throw err
+        usuarios = JSON.parse(data)
+        console.log('arquivo carregado com sucesso');
+    })
+}
+
 app.get("/usuarios", (req, res) => {
     res.json(usuarios)
+
 })
+
+
 
 app.get("/usuarios/:id", (requerimento, resposta) => {
     let encontrado = usuarios.find((usuario) => requerimento.params.id == usuario.id)
     resposta.json(encontrado)
 })
 
-app.get("/criarusuario", (req, res) => {
-    if (req.query.nome && req.query.email && req.query.telefone) {
+app.post("/usuarios", (req, res) => {
+    if (req.body.nome && req.body.email && req.body.telefone) {
         let novousuario = {
             id: Date.now(),
-            nome: req.query.nome,
-            email: req.query.email,
-            telefone: req.query.telefone
+            nome: req.body.nome,
+            email: req.body.email,
+            telefone: req.body.telefone
         }
         usuarios.push(novousuario)
         res.json(novousuario)
     } else {
         res.send("erro")
     }
-
 })
 
-app.get("/alterarusuario/:id", (req, res) => {
+app.patch("/usuarios/:id", (req, res) => {
     let encontrado = usuarios.find((usuario) => usuario.id == req.params.id)
     if (encontrado) {
         let novosdados = {}
-        if (req.query.nome) novosdados.nome = req.query.nome
-        if (req.query.email) novosdados.email = req.query.email
-        if (req.query.telefone) novosdados.telefone = req.query.telefone
+        if (req.body.nome) novosdados.nome = req.body.nome
+        if (req.body.email) novosdados.email = req.body.email
+        if (req.body.telefone) novosdados.telefone = req.body.telefone
+        Object.assign(encontrado, novosdados)
     }
     res.json(encontrado)
 })
 
-app.get("/deletarusuario/:id", (req, res) => {
+app.delete("/usuarios/:id", (req, res) => {
     let encontrado = usuarios.find((usuario) => usuario.id == req.params.id)
     if (encontrado) {
         usuarios = usuarios.filter((usuario) => usuario.id != req.params.id)
@@ -83,3 +108,4 @@ app.get("/deletarusuario/:id", (req, res) => {
 app.listen(3000, () => {
     console.log("Servidor iniciado em http://localhost:3000");
 })
+
