@@ -20,6 +20,7 @@
         "usuarios": "node --watch usuarios.js"
     },
     "dependencies": {
+        "better-sqlite3": "^13.0.3",
         "express": "^5.3.0"
     }
 }
